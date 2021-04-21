@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AssetBundleConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ABList Path="Assets/Res/Data/ABData/AssetBundleConfig.bytes" Crc="2595860623" ABName="assetbundleconfig" AssetName="AssetBundleConfig.bytes" />
+  <ABList Path="Assets/Res/Shaders/SphereShader.shader" Crc="1244072417" ABName="shader" AssetName="SphereShader.shader" />
+  <ABList Path="Assets/Res/Shaders/WaterShader.shader" Crc="2978268808" ABName="shader" AssetName="WaterShader.shader" />
+  <ABList Path="Assets/Res/Prefabs/Sohpie.prefab" Crc="865918985" ABName="sohpie" AssetName="Sohpie.prefab" />
+  <ABList Path="Assets/Res/Prefabs/Sphere.prefab" Crc="2718041220" ABName="sphere" AssetName="Sphere.prefab">
+    <ABDependency>shader</ABDependency>
+  </ABList>
+</AssetBundleConfig>

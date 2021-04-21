@@ -1,0 +1,17 @@
+ManifestFileVersion: 0
+CRC: 2772523010
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: shader
+      Dependencies: {}
+    Info_1:
+      Name: assetbundleconfig
+      Dependencies: {}
+    Info_2:
+      Name: sohpie
+      Dependencies: {}
+    Info_3:
+      Name: sphere
+      Dependencies:
+        Dependency_0: shader
