@@ -4,6 +4,7 @@
   <ABList Path="Assets/Res/Shaders/SphereShader.shader" Crc="1244072417" ABName="shader" AssetName="SphereShader.shader" />
   <ABList Path="Assets/Res/Shaders/WaterShader.shader" Crc="2978268808" ABName="shader" AssetName="WaterShader.shader" />
   <ABList Path="Assets/Res/Prefabs/Sohpie.prefab" Crc="865918985" ABName="sohpie" AssetName="Sohpie.prefab" />
+  <ABList Path="Assets/Res/Sounds/ding.mp3" Crc="3438174190" ABName="sound" AssetName="ding.mp3" />
   <ABList Path="Assets/Res/Prefabs/Sphere.prefab" Crc="2718041220" ABName="sphere" AssetName="Sphere.prefab">
     <ABDependency>shader</ABDependency>
   </ABList>

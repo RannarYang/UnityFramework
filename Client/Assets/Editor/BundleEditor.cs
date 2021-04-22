@@ -1,13 +1,12 @@
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Xml.Serialization;
 /*
  * @Author       : RannarYang
  * @Date         : 2021-04-21 15:12:46
  * @LastEditors  : RannarYang
- * @LastEditTime : 2021-04-21 21:22:06
+ * @LastEditTime : 2021-04-22 15:48:30
  * @FilePath     : \Client\Assets\Editor\BundleEditor.cs
  */
-
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Xml.Serialization;
 using System.IO;
 using System.Collections.Generic;
 using UnityEngine;

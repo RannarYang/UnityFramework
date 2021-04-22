@@ -1,17 +1,17 @@
 ManifestFileVersion: 0
-CRC: 3503185014
+CRC: 3381701868
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 844bc03ad8e0a48622109d0d4c1ab1b0
+    Hash: 5418f405b9f971547a89525e5b8f6991
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 5ad585dd02dfb5016c0dad519eab8f49
+    Hash: 9a2ca7bdbd1871f7131daf57de908e0c
 HashAppended: 0
 ClassTypes:
-- Class: 49
+- Class: 83
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/Res/Data/ABData/AssetBundleConfig.bytes
+- Assets/Res/Sounds/ding.mp3
 Dependencies: []
