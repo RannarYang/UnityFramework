@@ -1,17 +1,22 @@
 ManifestFileVersion: 0
-CRC: 3381701868
+CRC: 3853818849
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 5418f405b9f971547a89525e5b8f6991
+    Hash: 89498948365f130117d0d73ac9eacadc
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 9a2ca7bdbd1871f7131daf57de908e0c
+    Hash: 9b6bfb896d8a622d7d39e39c978b62e1
 HashAppended: 0
 ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
 - Class: 83
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
+- Assets/Res/Sounds/New Prefab.prefab
 - Assets/Res/Sounds/ding.mp3
 Dependencies: []

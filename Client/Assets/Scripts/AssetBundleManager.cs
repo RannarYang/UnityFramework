@@ -168,6 +168,8 @@ class ResourceItem {
     public float m_LastUseTime = 0.0f;
     // 引用计数
     protected int m_RefCount = 0;
+    // 是否跳场景清掉
+    public bool m_Clear = true;
     public int RefCount {
         get {
             return m_RefCount;

@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 3102106749
+CRC: 640593848
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 81390eabbf9eb8f851c58ca7067cc9fa
+    Hash: e9611cb14f8b03a93772de98aa23b3f6
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 4adb6f11d5e04776db600e1d8d680a31
+    Hash: fdb523df79c163c74dda18793a6a4da9
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -15,16 +15,21 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 21
   Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
 - Class: 43
   Script: {instanceID: 0}
 - Class: 48
   Script: {instanceID: 0}
-- Class: 74
+- Class: 135
   Script: {instanceID: 0}
 - Class: 137
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/Res/Model/Ch02_nonPBR.fbx
+- Assets/Res/Prefabs/Sphere.prefab
 - Assets/Res/Prefabs/Sohpie.prefab
-Dependencies: []
+Dependencies:
+- C:/Users/Administrator/Desktop/Workspace/UnityFramework/Client/AssetBundles/StandaloneWindows/shaders
