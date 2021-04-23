@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 640593848
+CRC: 3591046485
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: e9611cb14f8b03a93772de98aa23b3f6
+    Hash: 9bb7d05b103e142f85567d5e5edc8394
   TypeTreeHash:
     serializedVersion: 2
-    Hash: fdb523df79c163c74dda18793a6a4da9
+    Hash: 0d47cf29ae4816ac05dc55c9100b1e75
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -25,11 +25,9 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 135
   Script: {instanceID: 0}
-- Class: 137
-  Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/Res/Prefabs/Sphere.prefab
-- Assets/Res/Prefabs/Sohpie.prefab
+- Assets/Res/Materials/Sphere.mat
 Dependencies:
-- C:/Users/Administrator/Desktop/Workspace/UnityFramework/Client/AssetBundles/StandaloneWindows/shaders
+- C:/Users/Administrator/Desktop/Workspace/UnityFramework/Client/Assets/StreamingAssets/shader

@@ -1,18 +1,17 @@
 ManifestFileVersion: 0
-CRC: 3726891608
+CRC: 2451349466
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: d8241bc5cde059959114cac49379704f
+    Hash: 28b84c0cbf66734caea4555572976c6b
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 79f786ec140312af9ec009eebd4de22e
+    Hash: 5ad585dd02dfb5016c0dad519eab8f49
 HashAppended: 0
 ClassTypes:
-- Class: 48
+- Class: 49
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/Res/Shaders/SphereShader.shader
-- Assets/Res/Shaders/WaterShader.shader
+- Assets/Res/Data/ABData/AssetBundleConfig.bytes
 Dependencies: []
