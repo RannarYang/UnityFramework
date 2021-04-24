@@ -1,3 +1,10 @@
+/*
+ * @Author       : RannarYang
+ * @Date         : 2021-04-22 16:03:15
+ * @LastEditors  : RannarYang
+ * @LastEditTime : 2021-04-24 11:17:58
+ * @FilePath     : \Client\Assets\Scripts\AssetBundleManager.cs
+ */
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
 using UnityEngine;
