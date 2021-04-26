@@ -2,7 +2,7 @@
  * @Author       : RannarYang
  * @Date         : 2021-04-25 21:52:25
  * @LastEditors  : RannarYang
- * @LastEditTime : 2021-04-26 14:55:36
+ * @LastEditTime : 2021-04-26 16:45:47
  * @FilePath     : \Client\Assets\Base\Editor\Resource\BundleEditor.cs
  */
 using System.Collections.Generic;
@@ -14,9 +14,9 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 public class BundleEditor
 {
-    private static string m_BunleTargetPath = Application.dataPath+"/../AssetBundle/" + EditorUserBuildSettings.activeBuildTarget.ToString();
-    private static string ABCONFIGPATH = "Assets/RealFram/Editor/Resource/ABConfig.asset";
-    private static string ABBYTEPATH = RealConfig.GetRealFram().m_ABBytePath;
+    private static string m_BunleTargetPath = BConfigs.BunleTargetPath;
+    private static string ABCONFIGPATH = BConfigs.ABConfigPath;
+    private static string ABBYTEPATH = BConfigs.ABBytePath;
     //key是ab包名，value是路径，所有文件夹ab包dic
     private static Dictionary<string, string> m_AllFileDir = new Dictionary<string, string>();
     //过滤的list
@@ -202,7 +202,7 @@ public class BundleEditor
         }
 
         //写入xml
-        string xmlPath = Application.dataPath + "/AssetbundleConfig.xml";
+        string xmlPath = BConfigs.AssetBundleConfigXmlPath;
         if (File.Exists(xmlPath)) File.Delete(xmlPath);
         FileStream fileStream = new FileStream(xmlPath, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite);
         StreamWriter sw = new StreamWriter(fileStream, System.Text.Encoding.UTF8);

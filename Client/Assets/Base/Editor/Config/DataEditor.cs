@@ -10,10 +10,10 @@ using System.ComponentModel;
 
 public class DataEditor
 {
-    public static string XmlPath = RealConfig.GetRealFram().m_XmlPath;
-    public static string BinaryPath = RealConfig.GetRealFram().m_BinaryPath;
-    public static string ExcelPath = Application.dataPath + "/../Data/Excel/";
-    public static string RegPath = Application.dataPath + "/../Data/Reg/";
+    public static string XmlPath = BConfigs.XmlPath;
+    public static string BinaryPath = BConfigs.BinaryPath;
+    public static string ExcelPath = BConfigs.ExcelPath;
+    public static string RegPath = BConfigs.m_RegPath;
 
     [MenuItem("Assets/类转xml")]
     public static void AssetsClassToXml()
@@ -93,7 +93,7 @@ public class DataEditor
     [MenuItem("Tools/测试/测试读取xml")]
     public static void TestReadXml()
     {
-        string xmlPath = Application.dataPath + "/../Data/Reg/MonsterData.xml";
+        string xmlPath = BConfigs.TestReadXmlPath;
         XmlReader reader = null;
         try
         {
@@ -139,7 +139,7 @@ public class DataEditor
     [MenuItem("Tools/测试/测试写入Excel")]
     public static void TestWriteExcel()
     {
-        string xlsxPath = Application.dataPath + "/../Data/Excel/G怪物.xlsx";
+        string xlsxPath = BConfigs.TestWriteExcel;
         FileInfo xlsxFile = new FileInfo(xlsxPath);
         if (xlsxFile.Exists)
         {
