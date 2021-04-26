@@ -1,27 +1,38 @@
-﻿using System.Collections.Generic;
+﻿/*
+ * @Author       : RannarYang
+ * @Date         : 2021-04-25 21:52:25
+ * @LastEditors  : RannarYang
+ * @LastEditTime : 2021-04-26 14:56:25
+ * @FilePath     : \Client\Assets\Base\Res\ObjectManager.cs
+ */
+using System.Collections.Generic;
 using UnityEngine;
 
-public class ObjectManager : Singleton<ObjectManager>
+public sealed class ObjectManager : Singleton<ObjectManager>
 {
     //对象池节点
-    public Transform RecyclePoolTrs;
+    private Transform RecyclePoolTrs;
     //场景节点
-    public Transform SceneTrs;
+    private Transform SceneTrs;
     //对象池
-    protected Dictionary<uint, List<ResouceObj>> m_ObjectPoolDic = new Dictionary<uint, List<ResouceObj>>();
+    private Dictionary<uint, List<ResouceObj>> m_ObjectPoolDic = new Dictionary<uint, List<ResouceObj>>();
     //暂存ResObj的Dic
-    protected Dictionary<int, ResouceObj> m_ResouceObjDic = new Dictionary<int, ResouceObj>();
+    private Dictionary<int, ResouceObj> m_ResouceObjDic = new Dictionary<int, ResouceObj>();
     //ReourceObj的类对象池
-    protected Pool<ResouceObj> m_ResourceObjClassPool = null;
+    private Pool<ResouceObj> m_ResourceObjClassPool = null;
     //根据异步的guid储存ResourceObj,来判断是否正在异步加载
-    protected Dictionary<long, ResouceObj> m_AsyncResObjs = new Dictionary<long, ResouceObj>();
+    private Dictionary<long, ResouceObj> m_AsyncResObjs = new Dictionary<long, ResouceObj>();
     /// <summary>
     /// 初始化
     /// </summary>
     /// <param name="recycleTrs">回收节点</param>
     /// <param name="sceneTrs">场景默认节点</param>
     public void Init(Transform recycleTrs,Transform sceneTrs)
-    {
+    {   
+        if(Object.ReferenceEquals(recycleTrs, null) || Object.ReferenceEquals(sceneTrs, null)) {
+            Debug.LogError("请设置回收节点和场景默认节点");
+            return;
+        }
         m_ResourceObjClassPool = PoolManager.Instance.GetOrCreatClassPool<ResouceObj>(1000);
         RecyclePoolTrs = recycleTrs;
         SceneTrs = sceneTrs;
@@ -119,7 +130,7 @@ public class ObjectManager : Singleton<ObjectManager>
     /// </summary>
     /// <param name="crc"></param>
     /// <returns></returns>
-    protected ResouceObj GetObjectFromPool(uint crc)
+    private ResouceObj GetObjectFromPool(uint crc)
     {
         List<ResouceObj> st = null;
         if (m_ObjectPoolDic.TryGetValue(crc, out st) && st != null && st.Count > 0)
@@ -281,7 +292,7 @@ public class ObjectManager : Singleton<ObjectManager>
 
             return resObj.m_Guid;
         }
-        long guid = ResourceManager.Instance.CreatGuid();
+        long guid = IdGenerator.Instance.GetID(IdType.RESOURCEOBJECT);
         resObj = m_ResourceObjClassPool.Spawn(true);
         resObj.m_Crc = crc;
         resObj.m_SetSceneParent = setSceneObject;

@@ -1,4 +1,11 @@
-﻿using System.Collections.Generic;
+﻿/*
+ * @Author       : RannarYang
+ * @Date         : 2021-04-25 21:52:25
+ * @LastEditors  : RannarYang
+ * @LastEditTime : 2021-04-26 14:55:17
+ * @FilePath     : \Client\Assets\Base\Pool\Pool.cs
+ */
+using System.Collections.Generic;
 
 public class Pool<T> where T :class, new()
 {

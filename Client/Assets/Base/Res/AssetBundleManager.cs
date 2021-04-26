@@ -3,17 +3,17 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
-public class AssetBundleManager : Singleton<AssetBundleManager>
+public sealed class AssetBundleManager : Singleton<AssetBundleManager>
 {
-    protected string m_ABConfigABName = "assetbundleconfig";
+    private string m_ABConfigABName = "assetbundleconfig";
     //资源关系依赖配表，可以根据crc来找到对应资源块
-    protected Dictionary<uint, ResouceItem> m_ResouceItemDic = new Dictionary<uint, ResouceItem>();
+    private Dictionary<uint, ResouceItem> m_ResouceItemDic = new Dictionary<uint, ResouceItem>();
     //储存已加载的AB包，key为crc
-    protected Dictionary<uint, AssetBundleItem> m_AssetBundleItemDic = new Dictionary<uint, AssetBundleItem>();
+    private Dictionary<uint, AssetBundleItem> m_AssetBundleItemDic = new Dictionary<uint, AssetBundleItem>();
     //AssetBundleItem类对象池
-    protected Pool<AssetBundleItem> m_AssetBundleItemPool = PoolManager.Instance.GetOrCreatClassPool<AssetBundleItem>(500);
+    private Pool<AssetBundleItem> m_AssetBundleItemPool = PoolManager.Instance.GetOrCreatClassPool<AssetBundleItem>(500);
 
-    protected string ABLoadPath
+    private string ABLoadPath
     {
         get
         {

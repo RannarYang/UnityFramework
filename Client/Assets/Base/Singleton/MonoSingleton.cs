@@ -1,4 +1,11 @@
-﻿using UnityEngine;
+﻿/*
+ * @Author       : RannarYang
+ * @Date         : 2021-04-25 22:00:23
+ * @LastEditors  : RannarYang
+ * @LastEditTime : 2021-04-26 14:55:03
+ * @FilePath     : \Client\Assets\Base\Singleton\MonoSingleton.cs
+ */
+using UnityEngine;
 
 public class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
 {

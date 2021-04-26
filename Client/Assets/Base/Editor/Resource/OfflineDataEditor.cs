@@ -1,4 +1,11 @@
-﻿using UnityEngine;
+﻿/*
+ * @Author       : RannarYang
+ * @Date         : 2021-04-25 21:52:25
+ * @LastEditors  : RannarYang
+ * @LastEditTime : 2021-04-26 14:55:39
+ * @FilePath     : \Client\Assets\Base\Editor\Resource\OfflineDataEditor.cs
+ */
+using UnityEngine;
 using UnityEditor;
 
 public class OfflineDataEditor

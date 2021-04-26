@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-
-//字符串生成crc
+﻿//字符串生成crc
 public class Crc32
 {
     //crc表

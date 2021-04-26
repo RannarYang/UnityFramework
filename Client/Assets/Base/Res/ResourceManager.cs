@@ -1,4 +1,11 @@
-﻿using System.Collections;
+﻿/*
+ * @Author       : RannarYang
+ * @Date         : 2021-04-25 21:52:25
+ * @LastEditors  : RannarYang
+ * @LastEditTime : 2021-04-26 14:56:33
+ * @FilePath     : \Client\Assets\Base\Res\ResourceManager.cs
+ */
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -96,25 +103,24 @@ public delegate void OnAsyncObjFinish(string path, Object obj, object param1 = n
 //实例化对象加载完成回调
 public delegate void OnAsyncFinsih(string path, ResouceObj resObj, object param1 = null, object param2 = null, object param3 = null);
 
-public class ResourceManager : Singleton<ResourceManager>
+public sealed class ResourceManager : Singleton<ResourceManager>
 {
-    protected long m_Guid = 0;
     public bool m_LoadFormAssetBundle = false;
     //缓存使用的资源列表
-    public Dictionary<uint, ResouceItem> AssetDic { get; set; } = new Dictionary<uint, ResouceItem>();
+    private Dictionary<uint, ResouceItem> AssetDic { get; set; } = new Dictionary<uint, ResouceItem>();
     //缓存引用计数为零的资源列表，达到缓存最大的时候释放这个列表里面最早没用的资源
-    protected CMapList<ResouceItem> m_NoRefrenceAssetMapList = new CMapList<ResouceItem>();
+    private CMapList<ResouceItem> m_NoRefrenceAssetMapList = new CMapList<ResouceItem>();
 
     //中间类，回调类的类对象池
-    protected Pool<AsyncLoadResParam> m_AsyncLoadResParamPool = new Pool<AsyncLoadResParam>(50);
-    protected Pool<AsyncCallBack> m_AsyncCallBackPool = new Pool<AsyncCallBack>(100);
+    private Pool<AsyncLoadResParam> m_AsyncLoadResParamPool = new Pool<AsyncLoadResParam>(50);
+    private Pool<AsyncCallBack> m_AsyncCallBackPool = new Pool<AsyncCallBack>(100);
 
     //Mono脚本
-    protected MonoBehaviour m_Startmono;
+    private MonoBehaviour m_Startmono;
     //正在异步加载的资源列表
-    protected List<AsyncLoadResParam>[] m_LoadingAssetList = new List<AsyncLoadResParam>[(int)LoadResPriority.RES_NUM];
+    private List<AsyncLoadResParam>[] m_LoadingAssetList = new List<AsyncLoadResParam>[(int)LoadResPriority.RES_NUM];
     //正在异步加载的Dic
-    protected Dictionary<uint, AsyncLoadResParam> m_LoadingAssetDic = new Dictionary<uint, AsyncLoadResParam>();
+    private Dictionary<uint, AsyncLoadResParam> m_LoadingAssetDic = new Dictionary<uint, AsyncLoadResParam>();
 
     //最长连续卡着加载资源的时间，单位微妙
     private const long MAXLOADRESTIME = 200000;
@@ -130,15 +136,6 @@ public class ResourceManager : Singleton<ResourceManager>
         }
         m_Startmono = mono;
         m_Startmono.StartCoroutine(AsyncLoadCor());
-    }
-
-    /// <summary>
-    /// 创建唯一的GUID
-    /// </summary>
-    /// <returns></returns>
-    public long CreatGuid()
-    {
-        return m_Guid++;
     }
 
     /// <summary>
@@ -569,7 +566,7 @@ public class ResourceManager : Singleton<ResourceManager>
     /// <summary>
     /// 缓存太多，清除最早没有使用的资源
     /// </summary>
-    protected void WashOut()
+    private void WashOut()
     {
         //当大于缓存个数时，进行一半释放
         while (m_NoRefrenceAssetMapList.Size() >= MAXCACHECOUNT)
@@ -587,7 +584,7 @@ public class ResourceManager : Singleton<ResourceManager>
     /// </summary>
     /// <param name="item"></param>
     /// <param name="destroy"></param>
-    protected void DestoryResouceItme(ResouceItem item, bool destroyCache = false)
+    private void DestoryResouceItme(ResouceItem item, bool destroyCache = false)
     {
         if (item == null || item.RefCount > 0)
         {
@@ -623,7 +620,7 @@ public class ResourceManager : Singleton<ResourceManager>
     }
 
 #if UNITY_EDITOR
-    protected T LoadAssetByEditor<T>(string path) where T : UnityEngine.Object
+    private T LoadAssetByEditor<T>(string path) where T : UnityEngine.Object
     {
         return UnityEditor.AssetDatabase.LoadAssetAtPath<T>(path);
     }

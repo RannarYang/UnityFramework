@@ -1,3 +1,10 @@
+/*
+ * @Author       : RannarYang
+ * @Date         : 2021-04-26 07:31:33
+ * @LastEditors  : RannarYang
+ * @LastEditTime : 2021-04-26 14:55:20
+ * @FilePath     : \Client\Assets\Base\Pool\PoolManager.cs
+ */
 using System.Collections.Generic;
 using System;
 public class PoolManager: Singleton<PoolManager> {

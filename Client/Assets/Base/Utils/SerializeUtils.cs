@@ -1,4 +1,11 @@
-﻿using System;
+﻿/*
+ * @Author       : RannarYang
+ * @Date         : 2021-04-25 21:52:25
+ * @LastEditors  : RannarYang
+ * @LastEditTime : 2021-04-26 14:54:46
+ * @FilePath     : \Client\Assets\Base\Utils\SerializeUtils.cs
+ */
+using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Xml.Serialization;

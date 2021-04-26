@@ -1,4 +1,11 @@
-﻿using System.Collections.Generic;
+﻿/*
+ * @Author       : RannarYang
+ * @Date         : 2021-04-25 21:52:25
+ * @LastEditors  : RannarYang
+ * @LastEditTime : 2021-04-26 14:55:36
+ * @FilePath     : \Client\Assets\Base\Editor\Resource\BundleEditor.cs
+ */
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.IO;

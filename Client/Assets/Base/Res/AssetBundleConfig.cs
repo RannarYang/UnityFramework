@@ -1,4 +1,11 @@
-﻿using System.Collections.Generic;
+﻿/*
+ * @Author       : RannarYang
+ * @Date         : 2021-04-25 21:52:25
+ * @LastEditors  : RannarYang
+ * @LastEditTime : 2021-04-26 14:55:08
+ * @FilePath     : \Client\Assets\Base\Res\AssetBundleConfig.cs
+ */
+using System.Collections.Generic;
 using System.Xml.Serialization;
 
 [System.Serializable]
