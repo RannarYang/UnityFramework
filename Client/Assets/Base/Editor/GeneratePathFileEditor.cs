@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 using System.IO;
-public class CreateName2PathEditor : MonoBehaviour
+public class GeneratePathFileEditor : MonoBehaviour
 {
     public static string PrefabPath = BConfigs.PrefabPath;
     public static string PrefabNameFilePath = BConfigs.PrefabPathFilePath;
@@ -12,7 +12,7 @@ public class CreateName2PathEditor : MonoBehaviour
     public static string AudioPath = BConfigs.AudioPath;
     public static string AudioNameFilePath = BConfigs.AudioPathFilePath;
 
-    [MenuItem("Assets/生成prefab路径表")]
+    [MenuItem("Tools/路径表生成/Prefabs")]
     public static void GeneratePrefabPathFile() {
         string[] allStr = AssetDatabase.FindAssets("t:Prefab", new string[] {PrefabPath});
         List<string> paths = new List<string>();
@@ -25,7 +25,7 @@ public class CreateName2PathEditor : MonoBehaviour
         GeneratePathFile(PrefabNameFilePath, "PrefabPath", paths);
     }
 
-    [MenuItem("Assets/生成Audio路径表")]
+    [MenuItem("Tools/路径表生成/Audios")]
     public static void GenerateAudioPathFile() {
         string[] allStr = AssetDatabase.FindAssets("", new string[] {AudioPath});
         List<string> paths = new List<string>();
