@@ -24,7 +24,7 @@ public class BuildApp
         //打ab包
         BundleEditor.Build();
         //生成可执行程序
-        string abPath = BConfigs.BunleTargetPath + "/";
+        string abPath = BConfigs.BuildBundleTargetPath + "/";
         Copy(abPath, Application.streamingAssetsPath);
         string savePath = "";
         if (EditorUserBuildSettings.activeBuildTarget == BuildTarget.Android)
@@ -129,7 +129,7 @@ public class BuildApp
         BuildSetting buildSetting = GetPCBuildSetting();
         string suffix = SetPcSetting(buildSetting);
         //生成可执行程序
-        string abPath = BConfigs.BunleTargetPath + "/";
+        string abPath = BConfigs.BuildBundleTargetPath + "/";
         //清空生成的文件夹
         DeleteDir(m_WindowsPath);
         Copy(abPath, Application.streamingAssetsPath);
@@ -233,7 +233,7 @@ public class BuildApp
         BuildSetting buildSetting = GetAndoridBuildSetting();
         string suffix = SetAndroidSetting(buildSetting);
         //生成可执行程序
-        string abPath = BConfigs.BunleTargetPath + "/";
+        string abPath = BConfigs.BuildBundleTargetPath + "/";
         //清空生成的文件夹
         DeleteDir(m_AndroidPath);
         Copy(abPath, Application.streamingAssetsPath);
@@ -378,7 +378,7 @@ public class BuildApp
         string suffix = SetIOSSetting(buildSetting);
 
         //生成可执行程序
-        string abPath = BConfigs.BunleTargetPath + "/";
+        string abPath = BConfigs.BuildBundleTargetPath + "/";
         //清空生成的文件夹
         DeleteDir(m_IOSPath);
         Copy(abPath, Application.streamingAssetsPath);

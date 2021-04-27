@@ -2,7 +2,7 @@
  * @Author       : RannarYang
  * @Date         : 2021-04-25 21:52:25
  * @LastEditors  : RannarYang
- * @LastEditTime : 2021-04-26 14:56:25
+ * @LastEditTime : 2021-04-27 10:45:55
  * @FilePath     : \Client\Assets\Base\Res\ObjectManager.cs
  */
 using System.Collections.Generic;
@@ -15,13 +15,20 @@ public sealed class ObjectManager : Singleton<ObjectManager>
     //场景节点
     private Transform SceneTrs;
     //对象池
-    private Dictionary<uint, List<ResouceObj>> m_ObjectPoolDic = new Dictionary<uint, List<ResouceObj>>();
+    private Dictionary<uint, List<ResourceObj>> m_ObjectPoolDic = new Dictionary<uint, List<ResourceObj>>();
     //暂存ResObj的Dic
-    private Dictionary<int, ResouceObj> m_ResouceObjDic = new Dictionary<int, ResouceObj>();
+    private Dictionary<int, ResourceObj> m_ResouceObjDic = new Dictionary<int, ResourceObj>();
+
+#region 提供给MemoryDisplay
+    public Dictionary<int, ResourceObj> GetResourceObjDic() {
+        return this.m_ResouceObjDic;
+    }
+#endregion
+
     //ReourceObj的类对象池
-    private Pool<ResouceObj> m_ResourceObjClassPool = null;
+    private Pool<ResourceObj> m_ResourceObjClassPool = null;
     //根据异步的guid储存ResourceObj,来判断是否正在异步加载
-    private Dictionary<long, ResouceObj> m_AsyncResObjs = new Dictionary<long, ResouceObj>();
+    private Dictionary<long, ResourceObj> m_AsyncResObjs = new Dictionary<long, ResourceObj>();
     /// <summary>
     /// 初始化
     /// </summary>
@@ -33,7 +40,7 @@ public sealed class ObjectManager : Singleton<ObjectManager>
             Debug.LogError("请设置回收节点和场景默认节点");
             return;
         }
-        m_ResourceObjClassPool = PoolManager.Instance.GetOrCreatClassPool<ResouceObj>(1000);
+        m_ResourceObjClassPool = PoolManager.Instance.GetOrCreatClassPool<ResourceObj>(1000);
         RecyclePoolTrs = recycleTrs;
         SceneTrs = sceneTrs;
     }
@@ -46,10 +53,10 @@ public sealed class ObjectManager : Singleton<ObjectManager>
         List<uint> tempList = new List<uint>();
         foreach (uint key in m_ObjectPoolDic.Keys)
         {
-            List<ResouceObj> st = m_ObjectPoolDic[key];
+            List<ResourceObj> st = m_ObjectPoolDic[key];
             for (int i = st.Count - 1; i >= 0; i--)
             {
-                ResouceObj resObj = st[i];
+                ResourceObj resObj = st[i];
                 if (!System.Object.ReferenceEquals(resObj.m_CloneObj, null) && resObj.m_bClear)
                 {
                     GameObject.Destroy(resObj.m_CloneObj);
@@ -83,13 +90,13 @@ public sealed class ObjectManager : Singleton<ObjectManager>
     /// <param name="crc"></param>
     public void ClearPoolObject(uint crc)
     {
-        List<ResouceObj> st = null;
+        List<ResourceObj> st = null;
         if (!m_ObjectPoolDic.TryGetValue(crc, out st) || st == null)
             return;
 
         for (int i = st.Count - 1; i >= 0; i--)
         {
-            ResouceObj resObj = st[i];
+            ResourceObj resObj = st[i];
             if (resObj.m_bClear)
             {
                 st.Remove(resObj);
@@ -115,7 +122,7 @@ public sealed class ObjectManager : Singleton<ObjectManager>
     public OfflineData FindOfflineData(GameObject obj)
     {
         OfflineData data = null;
-        ResouceObj resObj = null;
+        ResourceObj resObj = null;
         m_ResouceObjDic.TryGetValue(obj.GetInstanceID(), out resObj);
         if (resObj != null)
         {
@@ -130,13 +137,13 @@ public sealed class ObjectManager : Singleton<ObjectManager>
     /// </summary>
     /// <param name="crc"></param>
     /// <returns></returns>
-    private ResouceObj GetObjectFromPool(uint crc)
+    private ResourceObj GetObjectFromPool(uint crc)
     {
-        List<ResouceObj> st = null;
+        List<ResourceObj> st = null;
         if (m_ObjectPoolDic.TryGetValue(crc, out st) && st != null && st.Count > 0)
         {
             ResourceManager.Instance.IncreaseResouceRef(crc);
-            ResouceObj resObj = st[0];
+            ResourceObj resObj = st[0];
             st.RemoveAt(0);
             GameObject obj = resObj.m_CloneObj;
             if (!System.Object.ReferenceEquals(obj, null))
@@ -165,7 +172,7 @@ public sealed class ObjectManager : Singleton<ObjectManager>
     /// <param name="guid"></param>
     public void CancleLoad(long guid)
     {
-        ResouceObj resObj = null;
+        ResourceObj resObj = null;
         if (m_AsyncResObjs.TryGetValue(guid, out resObj) && ResourceManager.Instance.CancleLoad(resObj))
         {
             m_AsyncResObjs.Remove(guid);
@@ -190,7 +197,7 @@ public sealed class ObjectManager : Singleton<ObjectManager>
     /// <returns></returns>
     public bool IsObjectManagerCreat(GameObject obj)
     {
-        ResouceObj resObj = m_ResouceObjDic[obj.GetInstanceID()];
+        ResourceObj resObj = m_ResouceObjDic[obj.GetInstanceID()];
         return resObj == null ? false : true;
     }
 
@@ -228,7 +235,7 @@ public sealed class ObjectManager : Singleton<ObjectManager>
     public GameObject InstantiateObject(string path, bool setSceneObj = false, bool bClear = true)
     {
         uint crc = Crc32.GetCrc32(path);
-        ResouceObj resouceObj = GetObjectFromPool(crc);
+        ResourceObj resouceObj = GetObjectFromPool(crc);
         if (resouceObj == null)
         {
             resouceObj = m_ResourceObjClassPool.Spawn(true);
@@ -277,7 +284,7 @@ public sealed class ObjectManager : Singleton<ObjectManager>
         }
 
         uint crc = Crc32.GetCrc32(path);
-        ResouceObj resObj = GetObjectFromPool(crc);
+        ResourceObj resObj = GetObjectFromPool(crc);
         if (resObj != null)
         {
             if (setSceneObject)
@@ -315,7 +322,7 @@ public sealed class ObjectManager : Singleton<ObjectManager>
     /// <param name="param1">参数1</param>
     /// <param name="param2">参数2</param>
     /// <param name="param3">参数3</param>
-    void OnLoadResouceObjFinish(string path, ResouceObj resObj, object param1 = null, object param2 = null, object param3 = null)
+    void OnLoadResouceObjFinish(string path, ResourceObj resObj, object param1 = null, object param2 = null, object param3 = null)
     {
         if (resObj == null)
             return;
@@ -367,7 +374,7 @@ public sealed class ObjectManager : Singleton<ObjectManager>
         if (obj == null)
             return;
 
-        ResouceObj resObj = null;
+        ResourceObj resObj = null;
         int tempID = obj.GetInstanceID();
         if (!m_ResouceObjDic.TryGetValue(tempID, out resObj))
         {
@@ -391,7 +398,7 @@ public sealed class ObjectManager : Singleton<ObjectManager>
         obj.name += "(Recycle)";
 #endif
 
-        List<ResouceObj> st = null;
+        List<ResourceObj> st = null;
         if (maxCacheCount == 0)
         {
             m_ResouceObjDic.Remove(tempID);
@@ -403,7 +410,7 @@ public sealed class ObjectManager : Singleton<ObjectManager>
         {
             if (!m_ObjectPoolDic.TryGetValue(resObj.m_Crc, out st) || st == null)
             {
-                st = new List<ResouceObj>();
+                st = new List<ResourceObj>();
                 m_ObjectPoolDic.Add(resObj.m_Crc, st);
             }
 

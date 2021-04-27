@@ -2,7 +2,7 @@
  * @Author       : RannarYang
  * @Date         : 2021-04-25 21:52:25
  * @LastEditors  : RannarYang
- * @LastEditTime : 2021-04-26 14:56:33
+ * @LastEditTime : 2021-04-27 10:55:26
  * @FilePath     : \Client\Assets\Base\Res\ResourceManager.cs
  */
 using System.Collections;
@@ -17,12 +17,13 @@ public enum LoadResPriority
     RES_NUM,
 }
 
-public class ResouceObj
+[System.Serializable]
+public class ResourceObj
 {
     //路径对应CRC
     public uint m_Crc = 0;
     //存ResouceItem
-    public ResouceItem m_ResItem = null;
+    public ResourceItem m_ResItem = null;
     //实例化出来的GameObject
     public GameObject m_CloneObj = null;
     //是否跳场景清除
@@ -79,7 +80,7 @@ public class AsyncCallBack
     //加载完成的回调(针对ObjectManager)
     public OnAsyncFinsih m_DealFinish = null;
     //ObjectManager对应的中间
-    public ResouceObj m_ResObj = null;
+    public ResourceObj m_ResObj = null;
 //---------------------------------------------
     //加载完成的回调
     public OnAsyncObjFinish m_DealObjFinish = null;
@@ -101,15 +102,29 @@ public class AsyncCallBack
 public delegate void OnAsyncObjFinish(string path, Object obj, object param1 = null, object param2 = null, object param3 = null);
 
 //实例化对象加载完成回调
-public delegate void OnAsyncFinsih(string path, ResouceObj resObj, object param1 = null, object param2 = null, object param3 = null);
+public delegate void OnAsyncFinsih(string path, ResourceObj resObj, object param1 = null, object param2 = null, object param3 = null);
 
 public sealed class ResourceManager : Singleton<ResourceManager>
 {
-    public bool m_LoadFormAssetBundle = false;
     //缓存使用的资源列表
-    private Dictionary<uint, ResouceItem> AssetDic { get; set; } = new Dictionary<uint, ResouceItem>();
+    private Dictionary<uint, ResourceItem> m_AssetDic { get; set; } = new Dictionary<uint, ResourceItem>();
     //缓存引用计数为零的资源列表，达到缓存最大的时候释放这个列表里面最早没用的资源
-    private CMapList<ResouceItem> m_NoRefrenceAssetMapList = new CMapList<ResouceItem>();
+    private CMapList<ResourceItem> m_NoRefrenceAssetMapList = new CMapList<ResourceItem>();
+
+#region 提供给MemoryDisplay
+    public Dictionary<uint, ResourceItem> AssetDic {
+        get {
+            return this.m_AssetDic;
+        }
+    }
+    public List<string> GetNoRefrenceAssetsName() {
+        List<string> names = new List<string>(this.m_NoRefrenceAssetMapList.Size());
+        foreach(ResourceItem k in this.m_NoRefrenceAssetMapList) {
+            names.Add(k.m_AssetName);
+        }
+        return names;
+    }
+#endregion
 
     //中间类，回调类的类对象池
     private Pool<AsyncLoadResParam> m_AsyncLoadResParamPool = new Pool<AsyncLoadResParam>(50);
@@ -143,8 +158,8 @@ public sealed class ResourceManager : Singleton<ResourceManager>
     /// </summary>
     public void ClearCache()
     {
-        List<ResouceItem> tempList = new List<ResouceItem>();
-        foreach (ResouceItem item in AssetDic.Values)
+        List<ResourceItem> tempList = new List<ResourceItem>();
+        foreach (ResourceItem item in m_AssetDic.Values)
         {
             if (item.m_Clear)
             {
@@ -152,7 +167,7 @@ public sealed class ResourceManager : Singleton<ResourceManager>
             }
         }
 
-        foreach (ResouceItem item in tempList)
+        foreach (ResourceItem item in tempList)
         {
             DestoryResouceItme(item, true);
         }
@@ -163,7 +178,7 @@ public sealed class ResourceManager : Singleton<ResourceManager>
     /// 取消异步加载资源
     /// </summary>
     /// <returns></returns>
-    public bool CancleLoad(ResouceObj res)
+    public bool CancleLoad(ResourceObj res)
     {
         AsyncLoadResParam para = null;
         if (m_LoadingAssetDic.TryGetValue(res.m_Crc, out para) && m_LoadingAssetList[(int)para.m_Priority].Contains(para))
@@ -196,7 +211,7 @@ public sealed class ResourceManager : Singleton<ResourceManager>
     /// 根据ResObj增加引用计数
     /// </summary>
     /// <returns></returns>
-    public int IncreaseResouceRef( ResouceObj resObj, int count =1)
+    public int IncreaseResouceRef( ResourceObj resObj, int count =1)
     {
         return resObj != null ? IncreaseResouceRef(resObj.m_Crc, count) : 0;
     }
@@ -209,8 +224,8 @@ public sealed class ResourceManager : Singleton<ResourceManager>
     /// <returns></returns>
     public int IncreaseResouceRef(uint crc = 0, int count = 1)
     {
-        ResouceItem item = null;
-        if (!AssetDic.TryGetValue(crc, out item) || item == null)
+        ResourceItem item = null;
+        if (!m_AssetDic.TryGetValue(crc, out item) || item == null)
             return 0;
 
         item.RefCount += count;
@@ -225,7 +240,7 @@ public sealed class ResourceManager : Singleton<ResourceManager>
     /// <param name="resObj"></param>
     /// <param name="count"></param>
     /// <returns></returns>
-    public int DecreaseResoucerRef(ResouceObj resObj, int count = 1)
+    public int DecreaseResoucerRef(ResourceObj resObj, int count = 1)
     {
         return resObj != null ? DecreaseResoucerRef(resObj.m_Crc, count) : 0;
     }
@@ -238,8 +253,8 @@ public sealed class ResourceManager : Singleton<ResourceManager>
     /// <returns></returns>
     public int DecreaseResoucerRef(uint crc, int count = 1)
     {
-        ResouceItem item = null;
-        if (!AssetDic.TryGetValue(crc, out item) || item == null)
+        ResourceItem item = null;
+        if (!m_AssetDic.TryGetValue(crc, out item) || item == null)
             return 0;
 
         item.RefCount -= count;
@@ -258,7 +273,7 @@ public sealed class ResourceManager : Singleton<ResourceManager>
             return;
         }
         uint crc = Crc32.GetCrc32(path);
-        ResouceItem item = GetCacheResouceItem(crc, 0);
+        ResourceItem item = GetCacheResouceItem(crc, 0);
         if (item != null)
         {
             return;
@@ -266,7 +281,7 @@ public sealed class ResourceManager : Singleton<ResourceManager>
 
         Object obj = null;
 #if UNITY_EDITOR
-        if (!m_LoadFormAssetBundle)
+        if (!BConfigs.IsLoadFormAssetBundle)
         {
             item = AssetBundleManager.Instance.FindResourceItme(crc);
             if (item != null && item.m_Obj != null)
@@ -277,7 +292,7 @@ public sealed class ResourceManager : Singleton<ResourceManager>
             {
                 if (item == null)
                 {
-                    item = new ResouceItem();
+                    item = new ResourceItem();
                     item.m_Crc = crc;
                 }
                 obj = LoadAssetByEditor<Object>(path);
@@ -313,7 +328,7 @@ public sealed class ResourceManager : Singleton<ResourceManager>
     /// <param name="path"></param>
     /// <param name="resObj"></param>
     /// <returns></returns>
-    public ResouceObj LoadResource(string path, ResouceObj resObj)
+    public ResourceObj LoadResource(string path, ResourceObj resObj)
     {
         if (resObj == null)
         {
@@ -322,7 +337,7 @@ public sealed class ResourceManager : Singleton<ResourceManager>
 
         uint crc = resObj.m_Crc == 0 ? Crc32.GetCrc32(path) : resObj.m_Crc;
 
-        ResouceItem item = GetCacheResouceItem(crc);
+        ResourceItem item = GetCacheResouceItem(crc);
         if (item != null)
         {
             resObj.m_ResItem = item;
@@ -331,7 +346,7 @@ public sealed class ResourceManager : Singleton<ResourceManager>
 
         Object obj = null;
 #if UNITY_EDITOR
-        if (!m_LoadFormAssetBundle)
+        if (!BConfigs.IsLoadFormAssetBundle)
         {
             item = AssetBundleManager.Instance.FindResourceItme(crc);
             if (item != null && item.m_Obj != null)
@@ -342,7 +357,7 @@ public sealed class ResourceManager : Singleton<ResourceManager>
             {
                 if (item == null)
                 {
-                    item = new ResouceItem();
+                    item = new ResourceItem();
                     item.m_Crc = crc;
                 }
                 obj = LoadAssetByEditor<Object>(path);
@@ -386,7 +401,7 @@ public sealed class ResourceManager : Singleton<ResourceManager>
             return null;
         }
         uint crc = Crc32.GetCrc32(path);
-        ResouceItem item = GetCacheResouceItem(crc);
+        ResourceItem item = GetCacheResouceItem(crc);
         if (item != null)
         {
             return item.m_Obj as T;
@@ -394,7 +409,7 @@ public sealed class ResourceManager : Singleton<ResourceManager>
 
         T obj = null;
 #if UNITY_EDITOR
-        if (!m_LoadFormAssetBundle)
+        if (!BConfigs.IsLoadFormAssetBundle)
         {
             item = AssetBundleManager.Instance.FindResourceItme(crc);
             if (item != null && item.m_AssetBundle != null)
@@ -412,7 +427,7 @@ public sealed class ResourceManager : Singleton<ResourceManager>
             {
                 if (item == null)
                 {
-                    item = new ResouceItem();
+                    item = new ResourceItem();
                     item.m_Crc = crc;
                 }
                 obj = LoadAssetByEditor<T>(path);
@@ -446,13 +461,13 @@ public sealed class ResourceManager : Singleton<ResourceManager>
     /// <param name="resObj"></param>
     /// <param name="destoryObj"></param>
     /// <returns></returns>
-    public bool ReleaseResouce(ResouceObj resObj, bool destoryObj = false)
+    public bool ReleaseResouce(ResourceObj resObj, bool destoryObj = false)
     {
         if (resObj == null)
             return false;
 
-        ResouceItem item = null;
-        if (!AssetDic.TryGetValue(resObj.m_Crc, out item) || null == item)
+        ResourceItem item = null;
+        if (!m_AssetDic.TryGetValue(resObj.m_Crc, out item) || null == item)
         {
             Debug.LogError("AssetDic里不存在改资源：" + resObj.m_CloneObj.name + "  可能释放了多次");
         }
@@ -478,8 +493,8 @@ public sealed class ResourceManager : Singleton<ResourceManager>
             return false;
         }
 
-        ResouceItem item = null;
-        foreach (ResouceItem res in AssetDic.Values)
+        ResourceItem item = null;
+        foreach (ResourceItem res in m_AssetDic.Values)
         {
             if (res.m_Guid == obj.GetInstanceID())
             {
@@ -513,8 +528,8 @@ public sealed class ResourceManager : Singleton<ResourceManager>
         }
 
         uint crc = Crc32.GetCrc32(path);
-        ResouceItem item = null;
-        if (!AssetDic.TryGetValue(crc, out item) || null == item)
+        ResourceItem item = null;
+        if (!m_AssetDic.TryGetValue(crc, out item) || null == item)
         {
             Debug.LogError("AssetDic里不存在改资源：" + path + "  可能释放了多次");
         }
@@ -533,7 +548,7 @@ public sealed class ResourceManager : Singleton<ResourceManager>
     /// <param name="crc"></param>
     /// <param name="obj"></param>
     /// <param name="addrefcount"></param>
-    void CacheResource(string path, ref ResouceItem item, uint crc, Object obj, int addrefcount = 1)
+    void CacheResource(string path, ref ResourceItem item, uint crc, Object obj, int addrefcount = 1)
     {
         //缓存太多，清除最早没有使用的资源
         WashOut();
@@ -552,14 +567,14 @@ public sealed class ResourceManager : Singleton<ResourceManager>
         item.m_Guid = obj.GetInstanceID();
         item.m_LastUseTime = Time.realtimeSinceStartup;
         item.RefCount += addrefcount;
-        ResouceItem oldItme = null;
-        if (AssetDic.TryGetValue(item.m_Crc, out oldItme))
+        ResourceItem oldItme = null;
+        if (m_AssetDic.TryGetValue(item.m_Crc, out oldItme))
         {
-            AssetDic[item.m_Crc] = item;
+            m_AssetDic[item.m_Crc] = item;
         }
         else
         {
-            AssetDic.Add(item.m_Crc, item);
+            m_AssetDic.Add(item.m_Crc, item);
         }
     }
 
@@ -573,7 +588,7 @@ public sealed class ResourceManager : Singleton<ResourceManager>
         {
             for (int i = 0; i < MAXCACHECOUNT / 2; i++)
             {
-                ResouceItem item = m_NoRefrenceAssetMapList.Back();
+                ResourceItem item = m_NoRefrenceAssetMapList.Back();
                 DestoryResouceItme(item, true);
             }
         }
@@ -584,7 +599,7 @@ public sealed class ResourceManager : Singleton<ResourceManager>
     /// </summary>
     /// <param name="item"></param>
     /// <param name="destroy"></param>
-    private void DestoryResouceItme(ResouceItem item, bool destroyCache = false)
+    private void DestoryResouceItme(ResourceItem item, bool destroyCache = false)
     {
         if (item == null || item.RefCount > 0)
         {
@@ -597,7 +612,7 @@ public sealed class ResourceManager : Singleton<ResourceManager>
             return;
         }
 
-        if (!AssetDic.Remove(item.m_Crc))
+        if (!m_AssetDic.Remove(item.m_Crc))
         {
             return;
         }
@@ -632,10 +647,10 @@ public sealed class ResourceManager : Singleton<ResourceManager>
     /// <param name="crc"></param>
     /// <param name="addrefcount"></param>
     /// <returns></returns>
-    ResouceItem GetCacheResouceItem(uint crc, int addrefcount = 1)
+    ResourceItem GetCacheResouceItem(uint crc, int addrefcount = 1)
     {
-        ResouceItem item = null;
-        if (AssetDic.TryGetValue(crc, out item))
+        ResourceItem item = null;
+        if (m_AssetDic.TryGetValue(crc, out item))
         {
             if (item != null)
             {
@@ -657,7 +672,7 @@ public sealed class ResourceManager : Singleton<ResourceManager>
             crc = Crc32.GetCrc32(path);
         }
 
-        ResouceItem item = GetCacheResouceItem(crc);
+        ResourceItem item = GetCacheResouceItem(crc);
         if (item != null)
         {
             if (dealFinish != null)
@@ -696,9 +711,9 @@ public sealed class ResourceManager : Singleton<ResourceManager>
     /// <param name="resObj"></param>
     /// <param name="dealfinish"></param>
     /// <param name="priority"></param>
-    public void AsyncLoadResource(string path, ResouceObj resObj, OnAsyncFinsih dealfinish, LoadResPriority priority)
+    public void AsyncLoadResource(string path, ResourceObj resObj, OnAsyncFinsih dealfinish, LoadResPriority priority)
     {
-        ResouceItem item = GetCacheResouceItem(resObj.m_Crc);
+        ResourceItem item = GetCacheResouceItem(resObj.m_Crc);
         if (item != null)
         {
             resObj.m_ResItem = item;
@@ -760,9 +775,9 @@ public sealed class ResourceManager : Singleton<ResourceManager>
                 callBackList = loadingItem.m_CallBackList;
 
                 Object obj = null;
-                ResouceItem item = null;
+                ResourceItem item = null;
 #if UNITY_EDITOR
-                if (!m_LoadFormAssetBundle)
+                if (!BConfigs.IsLoadFormAssetBundle)
                 {
                     if (loadingItem.m_Sprite)
                     {
@@ -778,7 +793,7 @@ public sealed class ResourceManager : Singleton<ResourceManager>
                     item = AssetBundleManager.Instance.FindResourceItme(loadingItem.m_Crc);
                     if (item == null)
                     {
-                        item = new ResouceItem();
+                        item = new ResourceItem();
                         item.m_Crc = loadingItem.m_Crc;
                     }
                 }
@@ -814,7 +829,7 @@ public sealed class ResourceManager : Singleton<ResourceManager>
 
                     if (callBack != null && callBack.m_DealFinish != null && callBack.m_ResObj != null)
                     {
-                        ResouceObj tempResObj = callBack.m_ResObj;
+                        ResourceObj tempResObj = callBack.m_ResObj;
                         tempResObj.m_ResItem = item;
                         callBack.m_DealFinish(loadingItem.m_Path, tempResObj, tempResObj.m_Param1, tempResObj.m_Param2, tempResObj.m_Param3);
                         callBack.m_DealFinish = null;
@@ -1020,7 +1035,7 @@ public class DoubleLinedList<T> where T : class, new()
     }
 }
 
-public class CMapList<T> where T : class, new()
+public class CMapList<T> : IEnumerable<T>, IEnumerable where T : class, new()
 {
     DoubleLinedList<T> m_DLink = new DoubleLinedList<T>();
     Dictionary<T, DoubleLinkedListNode<T>> m_FindMap = new Dictionary<T, DoubleLinkedListNode<T>>();
@@ -1028,6 +1043,18 @@ public class CMapList<T> where T : class, new()
     ~CMapList()
     {
         Clear();
+    }
+
+    public IEnumerator<T> GetEnumerator() {
+        foreach(KeyValuePair<T, DoubleLinkedListNode<T>> kv in this.m_FindMap) {
+            yield return kv.Value.t;
+        }
+    } 
+
+    IEnumerator IEnumerable.GetEnumerator() {
+        foreach(KeyValuePair<T, DoubleLinkedListNode<T>> kv in this.m_FindMap) {
+            yield return kv.Value.t;
+        }
     }
 
     /// <summary>

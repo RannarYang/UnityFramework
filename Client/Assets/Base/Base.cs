@@ -18,12 +18,21 @@ public abstract class Base : MonoSingleton<Base>{
         LoadConfiger();
 
         // 调用子类的OnAwake;
+        OnAwake();
     }
 
     //加载配置表
     protected abstract void LoadConfiger();
 
     protected abstract void OnAwake();
+
+
+    private void Start()
+    {
+        this.OnStart();
+    }
+
+    protected abstract void OnStart();
 
     private void OnApplicationQuit()
     {

@@ -1,8 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <AssetBundleConfig xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <ABList Path="Assets/Prefab/Cube.prefab" Crc="1628333367" ABName="cube" AssetName="Cube.prefab">
-    <ABDependce>sphere</ABDependce>
-  </ABList>
-  <ABList Path="Assets/RealFram/Data/Binary/BuffData.bytes" Crc="2262473451" ABName="data" AssetName="BuffData.bytes" />
-  <ABList Path="Assets/Prefab/Sphere.prefab" Crc="4144957121" ABName="sphere" AssetName="Sphere.prefab" />
+  <ABList Path="Assets/App/Config/Binary/BuffData.bytes" Crc="738641232" ABName="data" AssetName="BuffData.bytes" />
+  <ABList Path="Assets/App/Res/Prefabs/Sphere.prefab" Crc="995584941" ABName="sphere" AssetName="Sphere.prefab" />
+  <ABList Path="Assets/App/Res/Sprites/Test.png" Crc="2618726370" ABName="sprites" AssetName="Test.png" />
 </AssetBundleConfig>

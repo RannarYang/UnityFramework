@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 public static class BConfigs{
+    public static bool IsLoadFormAssetBundle = true;
     // APP ---------------------------------------------------------------------------
     public static string AndroidPath = Application.dataPath + "/../BuildTarget/Android/";
     public static string IOSPath = Application.dataPath + "/../BuildTarget/IOS/";
@@ -9,18 +10,30 @@ public static class BConfigs{
     public static string BuildNameTxtPath = Application.dataPath + "/../buildname.txt";
     // AB包 -----------------------------------------------------------------------------
     // AB包目录路径
-    public static string BunleTargetPath = Application.dataPath+"/../AssetBundle/" + EditorUserBuildSettings.activeBuildTarget.ToString();
+#if UNITY_EDITOR
+    public static string BuildBundleTargetPath {
+        get {
+            return Application.dataPath.Replace("Assets", "AssetBundle/" + EditorUserBuildSettings.activeBuildTarget.ToString());
+        }
+    }
+
+    public static string BundleTargetPath {
+        get {
+            return Application.streamingAssetsPath;
+        }
+    }
+#endif
     // ABConfig.asset的路径
-    public static string ABConfigPath = "Assets/RealFram/Editor/Resource/ABConfig.asset";
+    public static string ABConfigPath = "Assets/Base/BaseConfig/ABConfig.asset";
 
     public static string AssetBundleConfigXmlPath = Application.dataPath + "/AssetbundleConfig.xml";
     // 配置表 -----------------------------------------------------------------------------
     //打包时生成AB包配置表的二进制路径
-    public static string ABBytePath = " Assets/RealFram/Data/ABData/AssetBundleConfig.bytes";
+    public static string ABBytePath = "Assets/App/Config/ABData/AssetBundleConfig.bytes";
     //xml文件夹路径
-    public static string XmlPath = "Assets/RealFram/Data/Xml/";
+    public static string XmlPath = "Assets/App/Config/Xml/";
     //二进制文件夹路径
-    public static string BinaryPath = "Assets/RealFram/Data/Binary/";
+    public static string BinaryPath = "Assets/App/Config/Binary/";
     // Excel 文件路径
     public static string ExcelPath = Application.dataPath + "/../Data/Excel/";
     // Reg 文件路径

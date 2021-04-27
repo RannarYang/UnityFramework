@@ -12,7 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5939ddc2300061e4b8c79a8764980f7c, type: 3}
   m_Name: ABConfig
   m_EditorClassIdentifier: 
-  m_AllPrefabPath: []
+  m_AllPrefabPath:
+  - Assets/App/Res/Prefabs
   m_AllFileDirAB:
   - ABName: data
-    Path: Assets/RealFram/Data/Binary
+    Path: Assets/App/Config/Binary
+  - ABName: sprites
+    Path: Assets/App/Res/Sprites

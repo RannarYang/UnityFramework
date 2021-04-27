@@ -1,0 +1,16 @@
+ManifestFileVersion: 0
+CRC: 1322143098
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: data
+      Dependencies: {}
+    Info_1:
+      Name: sprites
+      Dependencies: {}
+    Info_2:
+      Name: sphere
+      Dependencies: {}
+    Info_3:
+      Name: assetbundleconfig
+      Dependencies: {}

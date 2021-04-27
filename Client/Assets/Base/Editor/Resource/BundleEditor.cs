@@ -2,7 +2,7 @@
  * @Author       : RannarYang
  * @Date         : 2021-04-25 21:52:25
  * @LastEditors  : RannarYang
- * @LastEditTime : 2021-04-26 16:45:47
+ * @LastEditTime : 2021-04-27 09:28:26
  * @FilePath     : \Client\Assets\Base\Editor\Resource\BundleEditor.cs
  */
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 public class BundleEditor
 {
-    private static string m_BunleTargetPath = BConfigs.BunleTargetPath;
+    private static string m_BunleTargetPath = BConfigs.BundleTargetPath;
     private static string ABCONFIGPATH = BConfigs.ABConfigPath;
     private static string ABBYTEPATH = BConfigs.ABBytePath;
     //key是ab包名，value是路径，所有文件夹ab包dic
@@ -153,7 +153,7 @@ public class BundleEditor
         //生成自己的配置表
         WriteData(resPathDic);
 
-        AssetBundleManifest manifest = BuildPipeline.BuildAssetBundles(m_BunleTargetPath, BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
+        AssetBundleManifest manifest = BuildPipeline.BuildAssetBundles(m_BunleTargetPath + "/", BuildAssetBundleOptions.ChunkBasedCompression, EditorUserBuildSettings.activeBuildTarget);
         if (manifest == null)
         {
             Debug.LogError("AssetBundle 打包失败！");

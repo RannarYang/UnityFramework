@@ -7,11 +7,24 @@ public sealed class AssetBundleManager : Singleton<AssetBundleManager>
 {
     private string m_ABConfigABName = "assetbundleconfig";
     //资源关系依赖配表，可以根据crc来找到对应资源块
-    private Dictionary<uint, ResouceItem> m_ResouceItemDic = new Dictionary<uint, ResouceItem>();
+    private Dictionary<uint, ResourceItem> m_ResouceItemDic = new Dictionary<uint, ResourceItem>();
     //储存已加载的AB包，key为crc
     private Dictionary<uint, AssetBundleItem> m_AssetBundleItemDic = new Dictionary<uint, AssetBundleItem>();
     //AssetBundleItem类对象池
     private Pool<AssetBundleItem> m_AssetBundleItemPool = PoolManager.Instance.GetOrCreatClassPool<AssetBundleItem>(500);
+
+#region 提供给MemoryDisplay
+    public Dictionary<uint, ResourceItem> ResouceItemDic {
+        get {
+            return this.m_ResouceItemDic;
+        }
+    }
+    public Dictionary<uint, AssetBundleItem> AssetBundleItemDic {
+        get {
+            return this.m_AssetBundleItemDic;
+        }
+    }
+#endregion
 
     private string ABLoadPath
     {
@@ -27,7 +40,7 @@ public sealed class AssetBundleManager : Singleton<AssetBundleManager>
     public bool LoadAssetBundleConfig()
     {
 #if UNITY_EDITOR
-        if (!ResourceManager.Instance.m_LoadFormAssetBundle)
+        if (!BConfigs.IsLoadFormAssetBundle)
             return false;
 #endif
 
@@ -49,7 +62,7 @@ public sealed class AssetBundleManager : Singleton<AssetBundleManager>
         for (int i = 0; i < config.ABList.Count; i++)
         {
             ABBase abBase = config.ABList[i];
-            ResouceItem item = new ResouceItem();
+            ResourceItem item = new ResourceItem();
             item.m_Crc = abBase.Crc;
             item.m_AssetName = abBase.AssetName;
             item.m_ABName = abBase.ABName;
@@ -71,9 +84,9 @@ public sealed class AssetBundleManager : Singleton<AssetBundleManager>
     /// </summary>
     /// <param name="crc"></param>
     /// <returns></returns>
-    public ResouceItem LoadResouceAssetBundle(uint crc)
+    public ResourceItem LoadResouceAssetBundle(uint crc)
     {
-        ResouceItem item = null;
+        ResourceItem item = null;
 
         if (!m_ResouceItemDic.TryGetValue(crc, out item) || item == null)
         {
@@ -131,7 +144,7 @@ public sealed class AssetBundleManager : Singleton<AssetBundleManager>
     /// 释放资源
     /// </summary>
     /// <param name="item"></param>
-    public void ReleaseAsset(ResouceItem item)
+    public void ReleaseAsset(ResourceItem item)
     {
         if (item == null)
         {
@@ -170,14 +183,16 @@ public sealed class AssetBundleManager : Singleton<AssetBundleManager>
     /// </summary>
     /// <param name="crc"></param>
     /// <returns></returns>
-    public ResouceItem FindResourceItme(uint crc)
+    public ResourceItem FindResourceItme(uint crc)
     {
-        ResouceItem item = null;
+        ResourceItem item = null;
         m_ResouceItemDic.TryGetValue(crc, out item);
         return item;
     }
 }
 
+
+[System.Serializable]
 public class AssetBundleItem
 {
     public AssetBundle assetBundle = null;
@@ -190,7 +205,8 @@ public class AssetBundleItem
     }
 }
 
-public class ResouceItem
+[System.Serializable]
+public class ResourceItem
 {
     //资源路径的CRC
     public uint m_Crc = 0;
@@ -210,6 +226,7 @@ public class ResouceItem
     //资源最后所使用的时间
     public float m_LastUseTime = 0.0f;
     //引用计数
+    [SerializeField]
     protected int m_RefCount = 0;
     //是否跳场景清掉
     public bool m_Clear = true;
