@@ -19,3 +19,5 @@ MonoBehaviour:
     Path: Assets/App/Config/Binary
   - ABName: sprites
     Path: Assets/App/Res/Sprites
+  - ABName: audios
+    Path: Assets/App/Res/Audios

@@ -10,10 +10,10 @@ using System.ComponentModel;
 
 public class DataEditor
 {
-    public static string XmlPath = BConfigs.XmlPath;
-    public static string BinaryPath = BConfigs.BinaryPath;
-    public static string ExcelPath = BConfigs.ExcelPath;
-    public static string RegPath = BConfigs.m_RegPath;
+    private static string XmlPath = BConfigs.XmlPath;
+    private static string BinaryPath = BConfigs.BinaryPath;
+    private static string ExcelPath = BConfigs.ExcelPath;
+    private static string RegPath = BConfigs.m_RegPath;
 
     [MenuItem("Assets/类转xml")]
     public static void AssetsClassToXml()

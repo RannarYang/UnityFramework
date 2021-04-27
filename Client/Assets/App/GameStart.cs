@@ -2,7 +2,7 @@
  * @Author       : RannarYang
  * @Date         : 2021-04-26 14:40:59
  * @LastEditors  : RannarYang
- * @LastEditTime : 2021-04-27 11:30:35
+ * @LastEditTime : 2021-04-27 15:42:23
  * @FilePath     : \Client\Assets\App\GameStart.cs
  */
 using UnityEngine;
@@ -17,9 +17,9 @@ public class GameStart : Base
         Sprite sp = ResourceManager.Instance.LoadResource<Sprite>("Assets/App/Res/Sprites/Test.png");
         ResourceManager.Instance.ReleaseResouce(sp);
 
-        ObjectManager.Instance.PreloadGameObject("Assets/App/Res/Prefabs/Sphere.prefab", 5);
+        ObjectManager.Instance.PreloadGameObject(PrefabPath.Sphere, 5);
 
-        ObjectManager.Instance.InstantiateObject("Assets/App/Res/Prefabs/Sphere.prefab");
+        ObjectManager.Instance.InstantiateObject(PrefabPath.Sphere);
         CheckAndAddMemoryDisplay();
     } 
 

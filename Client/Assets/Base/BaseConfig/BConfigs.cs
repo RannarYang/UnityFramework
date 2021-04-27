@@ -41,4 +41,11 @@ public static class BConfigs{
     // 测试数据
     public static string TestReadXmlPath = Application.dataPath + "/../Data/Reg/MonsterData.xml";
     public static string TestWriteExcel = Application.dataPath + "/../Data/Excel/G怪物.xlsx";
+
+    // 特殊目录 ----------------------------------------------------------------
+    public static string PrefabPath = "Assets/App/Res/Prefabs";
+    public static string PrefabPathFilePath = "Assets/App/ConstString/PrefabPath.cs";
+
+    public static string AudioPath = "Assets/App/Res/Audios";
+    public static string AudioPathFilePath = "Assets/App/ConstString/AudioPath.cs";
 }
