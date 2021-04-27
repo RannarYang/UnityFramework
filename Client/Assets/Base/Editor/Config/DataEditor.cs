@@ -10,10 +10,10 @@ using System.ComponentModel;
 
 public class DataEditor
 {
-    private static string XmlPath = BConfigs.XmlPath;
-    private static string BinaryPath = BConfigs.BinaryPath;
-    private static string ExcelPath = BConfigs.ExcelPath;
-    private static string RegPath = BConfigs.m_RegPath;
+    private static string XmlPath = BEditorConfig.XmlPath;
+    private static string BinaryPath = BEditorConfig.BinaryPath;
+    private static string ExcelPath = BEditorConfig.ExcelPath;
+    private static string RegPath = BEditorConfig.m_RegPath;
 
     [MenuItem("Assets/类转xml")]
     public static void AssetsClassToXml()
@@ -93,7 +93,7 @@ public class DataEditor
     [MenuItem("Tools/测试/测试读取xml")]
     public static void TestReadXml()
     {
-        string xmlPath = BConfigs.TestReadXmlPath;
+        string xmlPath = BEditorConfig.TestReadXmlPath;
         XmlReader reader = null;
         try
         {
@@ -139,7 +139,7 @@ public class DataEditor
     [MenuItem("Tools/测试/测试写入Excel")]
     public static void TestWriteExcel()
     {
-        string xlsxPath = BConfigs.TestWriteExcel;
+        string xlsxPath = BEditorConfig.TestWriteExcel;
         FileInfo xlsxFile = new FileInfo(xlsxPath);
         if (xlsxFile.Exists)
         {

@@ -2,7 +2,7 @@
  * @Author       : RannarYang
  * @Date         : 2021-04-25 21:52:25
  * @LastEditors  : RannarYang
- * @LastEditTime : 2021-04-27 09:28:26
+ * @LastEditTime : 2021-04-27 16:08:01
  * @FilePath     : \Client\Assets\Base\Editor\Resource\BundleEditor.cs
  */
 using System.Collections.Generic;
@@ -14,9 +14,9 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 public class BundleEditor
 {
-    private static string m_BunleTargetPath = BConfigs.BundleTargetPath;
-    private static string ABCONFIGPATH = BConfigs.ABConfigPath;
-    private static string ABBYTEPATH = BConfigs.ABBytePath;
+    private static string m_BunleTargetPath = BEditorConfig.BundleTargetPath;
+    private static string ABCONFIGPATH = BEditorConfig.ABConfigPath;
+    private static string ABBYTEPATH = BEditorConfig.ABBytePath;
     //key是ab包名，value是路径，所有文件夹ab包dic
     private static Dictionary<string, string> m_AllFileDir = new Dictionary<string, string>();
     //过滤的list
@@ -26,7 +26,7 @@ public class BundleEditor
     //储存所有有效路径
     private static List<string> m_ConfigFil = new List<string>();
 
-    [MenuItem("Tools/打包")]
+    [MenuItem("Tools/打AB包")]
     public static void Build()
     {
         DataEditor.AllXmlToBinary();
@@ -202,7 +202,7 @@ public class BundleEditor
         }
 
         //写入xml
-        string xmlPath = BConfigs.AssetBundleConfigXmlPath;
+        string xmlPath = BEditorConfig.AssetBundleConfigXmlPath;
         if (File.Exists(xmlPath)) File.Delete(xmlPath);
         FileStream fileStream = new FileStream(xmlPath, FileMode.Create, FileAccess.ReadWrite, FileShare.ReadWrite);
         StreamWriter sw = new StreamWriter(fileStream, System.Text.Encoding.UTF8);

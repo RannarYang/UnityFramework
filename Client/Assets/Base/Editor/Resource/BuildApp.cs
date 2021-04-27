@@ -2,7 +2,7 @@
  * @Author       : RannarYang
  * @Date         : 2021-04-25 21:52:25
  * @LastEditors  : RannarYang
- * @LastEditTime : 2021-04-26 16:47:10
+ * @LastEditTime : 2021-04-27 16:09:34
  * @FilePath     : \Client\Assets\Base\Editor\Resource\BuildApp.cs
  */
 using System.Collections.Generic;
@@ -14,9 +14,9 @@ using System.IO;
 public class BuildApp
 {
     private static string m_AppName = PlayerSettings.productName;//RealConfig.GetRealFram().m_AppName;
-    public static string m_AndroidPath = BConfigs.AndroidPath;
-    public static string m_IOSPath = BConfigs.IOSPath;
-    public static string m_WindowsPath = BConfigs.WindowsPath;
+    public static string m_AndroidPath = BEditorConfig.AndroidPath;
+    public static string m_IOSPath = BEditorConfig.IOSPath;
+    public static string m_WindowsPath = BEditorConfig.WindowsPath;
 
     [MenuItem("Build/标准包")]
     public static void Build()
@@ -24,7 +24,7 @@ public class BuildApp
         //打ab包
         BundleEditor.Build();
         //生成可执行程序
-        string abPath = BConfigs.BuildBundleTargetPath + "/";
+        string abPath = BEditorConfig.BuildBundleTargetPath + "/";
         Copy(abPath, Application.streamingAssetsPath);
         string savePath = "";
         if (EditorUserBuildSettings.activeBuildTarget == BuildTarget.Android)
@@ -129,7 +129,7 @@ public class BuildApp
         BuildSetting buildSetting = GetPCBuildSetting();
         string suffix = SetPcSetting(buildSetting);
         //生成可执行程序
-        string abPath = BConfigs.BuildBundleTargetPath + "/";
+        string abPath = BEditorConfig.BuildBundleTargetPath + "/";
         //清空生成的文件夹
         DeleteDir(m_WindowsPath);
         Copy(abPath, Application.streamingAssetsPath);
@@ -233,7 +233,7 @@ public class BuildApp
         BuildSetting buildSetting = GetAndoridBuildSetting();
         string suffix = SetAndroidSetting(buildSetting);
         //生成可执行程序
-        string abPath = BConfigs.BuildBundleTargetPath + "/";
+        string abPath = BEditorConfig.BuildBundleTargetPath + "/";
         //清空生成的文件夹
         DeleteDir(m_AndroidPath);
         Copy(abPath, Application.streamingAssetsPath);
@@ -378,7 +378,7 @@ public class BuildApp
         string suffix = SetIOSSetting(buildSetting);
 
         //生成可执行程序
-        string abPath = BConfigs.BuildBundleTargetPath + "/";
+        string abPath = BEditorConfig.BuildBundleTargetPath + "/";
         //清空生成的文件夹
         DeleteDir(m_IOSPath);
         Copy(abPath, Application.streamingAssetsPath);
@@ -484,7 +484,7 @@ public class BuildApp
 
     public static void WriteBuildName(string name)
     {
-        FileInfo fileInfo = new FileInfo(BConfigs.BuildNameTxtPath);
+        FileInfo fileInfo = new FileInfo(BEditorConfig.BuildNameTxtPath);
         StreamWriter sw = fileInfo.CreateText();
         sw.WriteLine(name);
         sw.Close();

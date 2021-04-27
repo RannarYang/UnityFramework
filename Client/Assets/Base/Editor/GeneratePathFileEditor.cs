@@ -6,11 +6,11 @@ using System.Collections.Generic;
 using System.IO;
 public class GeneratePathFileEditor : MonoBehaviour
 {
-    public static string PrefabPath = BConfigs.PrefabPath;
-    public static string PrefabNameFilePath = BConfigs.PrefabPathFilePath;
+    public static string PrefabPath = BEditorConfig.PrefabPath;
+    public static string PrefabNameFilePath = BEditorConfig.PrefabPathFilePath;
 
-    public static string AudioPath = BConfigs.AudioPath;
-    public static string AudioNameFilePath = BConfigs.AudioPathFilePath;
+    public static string AudioPath = BEditorConfig.AudioPath;
+    public static string AudioNameFilePath = BEditorConfig.AudioPathFilePath;
 
     [MenuItem("Tools/路径表生成/Prefabs")]
     public static void GeneratePrefabPathFile() {
