@@ -2,7 +2,7 @@
  * @Author       : RannarYang
  * @Date         : 2021-04-25 21:52:25
  * @LastEditors  : RannarYang
- * @LastEditTime : 2021-04-27 16:09:34
+ * @LastEditTime : 2021-04-27 16:48:08
  * @FilePath     : \Client\Assets\Base\Editor\Resource\BuildApp.cs
  */
 using System.Collections.Generic;
@@ -23,9 +23,7 @@ public class BuildApp
     {
         //打ab包
         BundleEditor.Build();
-        //生成可执行程序
-        string abPath = BEditorConfig.BuildBundleTargetPath + "/";
-        Copy(abPath, Application.streamingAssetsPath);
+
         string savePath = "";
         if (EditorUserBuildSettings.activeBuildTarget == BuildTarget.Android)
         {
@@ -45,7 +43,6 @@ public class BuildApp
         }
 
         BuildPipeline.BuildPlayer(FindEnableEditorrScenes(), savePath, EditorUserBuildSettings.activeBuildTarget, BuildOptions.None);
-        DeleteDir(Application.streamingAssetsPath);
     }
 
     private static string[] FindEnableEditorrScenes()

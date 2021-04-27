@@ -2,11 +2,11 @@
  * @Author       : RannarYang
  * @Date         : 2021-04-26 14:40:59
  * @LastEditors  : RannarYang
- * @LastEditTime : 2021-04-27 15:42:23
- * @FilePath     : \Client\Assets\App\GameStart.cs
+ * @LastEditTime : 2021-04-27 16:12:55
+ * @FilePath     : \Client\Assets\App\AppStart.cs
  */
 using UnityEngine;
-public class GameStart : Base
+public class AppStart : AppBase
 {
     //加载配置表
     protected override void LoadConfiger() {

@@ -1,5 +1,5 @@
 using UnityEngine;
-public abstract class Base : MonoSingleton<Base>{
+public abstract class AppBase : MonoSingleton<AppBase>{
     public Transform RecyclePoolTrs;
     public Transform SceneTrs;
     protected sealed override void Awake()
