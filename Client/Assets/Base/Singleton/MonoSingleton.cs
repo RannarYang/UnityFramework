@@ -2,7 +2,7 @@
  * @Author       : RannarYang
  * @Date         : 2021-04-25 22:00:23
  * @LastEditors  : RannarYang
- * @LastEditTime : 2021-04-26 14:55:03
+ * @LastEditTime : 2021-04-30 08:49:41
  * @FilePath     : \Client\Assets\Base\Singleton\MonoSingleton.cs
  */
 using UnityEngine;
