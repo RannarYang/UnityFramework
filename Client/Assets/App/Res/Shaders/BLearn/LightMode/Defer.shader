@@ -4,8 +4,8 @@ Shader "Unlit/Defer"
     {
         _MainTex("MainTex", 2D) = "white" {}
         _Diffuse("Diffuse", Color) = (1.0, 1.0, 1.0, 1.0)
-        _Specular("_Specular", Color) = (1.0, 1.0, 1.0, 1.0)
-        _Gloss("Gloss", Range(8.0, 256)) = 20
+        _Specular("Specular", Color) = (1.0, 1.0, 1.0, 1.0)
+        _Gloss("Gloss", Range(8.0, 50)) = 20
     }
     SubShader
     {
@@ -15,8 +15,11 @@ Shader "Unlit/Defer"
         Pass {
             Tags {"LightMode" = "Deferred"}
             CGPROGRAM
+            #pragma target 3.0
             #pragma vertex vert
             #pragma fragment frag
+            #pragma exclude_renderers norm
+			#pragma multi_compile __ UNITY_HDR_ON
 
             #include "UnityCG.cginc"
 
@@ -59,8 +62,11 @@ Shader "Unlit/Defer"
                 o.gBuffer0.rgb = color;
                 o.gBuffer0.a = 1;
                 o.gBuffer1.rgb = _Specular.rgb;
-                o.gBuffer1.a = _Gloss;
-                o.gBuffer2 = float4(normalize(i.nDirWS), 1);
+                o.gBuffer1.a = _Gloss / 50.0;
+                o.gBuffer2 = float4(i.nDirWS * 0.5 + 0.5,1);
+                #if !defined(UNITY_HDR_ON)
+					color.rgb = exp2(-color.rgb);
+				#endif
                 o.gBuffer3 = fixed4(color, 1);
                 return o;
             }

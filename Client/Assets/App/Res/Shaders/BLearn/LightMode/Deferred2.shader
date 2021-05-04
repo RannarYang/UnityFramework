@@ -1,4 +1,4 @@
-Shader "Unlit/002-Deferred"
+Shader "Unlit/Deferred2"
 {
     Properties
     {
@@ -17,7 +17,7 @@ Shader "Unlit/002-Deferred"
             #pragma fragment frag
 			#pragma multi_compile_lightpass
 			//代表排除不支持MRT的硬件
-			#pragma exclude_renderers norm
+			#pragma exclude_renderers nomrt
 			#pragma multi_compile __ UNITY_HDR_ON
 
 			#include "UnityCG.cginc"
@@ -59,65 +59,65 @@ Shader "Unlit/002-Deferred"
 			#endif
 			frag(unity_v2f_deferred i) : SV_Target
 			{
-				// float3 posWS;
-				// float2 uv;
-				// half3 lDirWS;
-				// float atten;
-				// float fadeDist;
-				// UnityDeferredCalculateLightParams(i,posWS,uv,lDirWS, atten,fadeDist);
+				float3 posWS;
+				float2 uv;
+				half3 lDirWS;
+				float atten;
+				float fadeDist;
+				UnityDeferredCalculateLightParams(i,posWS,uv,lDirWS, atten,fadeDist);
 
-				float2 uv = i.uv.xy/i.uv.w;
+				// float2 uv = i.uv.xy/i.uv.w;
 
-				//通过深度和方向重新构建世界坐标
-				float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, uv);
-				depth = Linear01Depth(depth);
-				//ray 只能表示方向，长度不一定   _ProjectionParams.z是远平面， 因为xyz都是等比例，所以 _ProjectionParams.z/i.ray.z就是 rayToFraPlane向量和ray向量的比值
-				float3 rayToFraPlane = i.ray * (_ProjectionParams.z/i.ray.z);
-				float4 posVS = float4(rayToFraPlane * depth,1);
-				float3 posWS = mul(unity_CameraToWorld, posVS).xyz;
+				// //通过深度和方向重新构建世界坐标
+				// float depth = SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, uv);
+				// depth = Linear01Depth(depth);
+				// //ray 只能表示方向，长度不一定   _ProjectionParams.z是远平面， 因为xyz都是等比例，所以 _ProjectionParams.z/i.ray.z就是 rayToFraPlane向量和ray向量的比值
+				// float3 rayToFraPlane = i.ray * (_ProjectionParams.z/i.ray.z);
+				// float4 posVS = float4(rayToFraPlane * depth,1);
+				// float3 posWS = mul(unity_CameraToWorld, posVS).xyz;
 
-				float fadeDist = UnityComputeShadowFadeDistance(posWS, posVS.z);
+				// float fadeDist = UnityComputeShadowFadeDistance(posWS, posVS.z);
 
-				//对不同的光进行光衰减计算 包括阴影计算
-				#if defined(SPOT)
-					float3 toLight = _LightPos.xyz-posWS;
-					half3 lDirWS = normalize(toLight);
+				// //对不同的光进行光衰减计算 包括阴影计算
+				// #if defined(SPOT)
+				// 	float3 toLight = _LightPos.xyz-posWS;
+				// 	half3 lDirWS = normalize(toLight);
 
-					float4 uvCookie = mul(unity_WorldToLight, float4(posWS,1));
-					float atten = tex2Dbias(_LightTexture0, float4(uvCookie.xy/uvCookie.w,0,-8)).w;
+				// 	float4 uvCookie = mul(unity_WorldToLight, float4(posWS,1));
+				// 	float atten = tex2Dbias(_LightTexture0, float4(uvCookie.xy/uvCookie.w,0,-8)).w;
 
-					atten *= uvCookie < 0;
+				// 	atten *= uvCookie < 0;
 
-					atten *= tex2D(_LightTextureB0, dot(toLight,toLight) * _LightPos.w).r;
+				// 	atten *= tex2D(_LightTextureB0, dot(toLight,toLight) * _LightPos.w).r;
 
-					atten *= UnityDeferredComputeShadow(posWS, fadeDist, uv);
-				#elif defined(DIRECTIONAL) || defined(DIRECTIONAL_COOKIE)
-					half3 lDirWS = -_lDirWS.xyz;
-					float atten = 1.0;
+				// 	atten *= UnityDeferredComputeShadow(posWS, fadeDist, uv);
+				// #elif defined(DIRECTIONAL) || defined(DIRECTIONAL_COOKIE)
+				// 	half3 lDirWS = -_LightPos.xyz;
+				// 	float atten = 1.0;
 
-					atten *= UnityDeferredComputeShadow(posWS, fadeDist, uv);
+				// 	atten *= UnityDeferredComputeShadow(posWS, fadeDist, uv);
 
-					#if defined(DIRECTIONAL_COOKIE)
-					float4 uvCookie = mul(unity_WorldToLight, float4(posWS,1));
-					atten *= tex2Dbias(_LightTexture0, float4(uvCookie.xy,0,-8)).w;
-					#endif
+				// 	#if defined(DIRECTIONAL_COOKIE)
+				// 	float4 uvCookie = mul(unity_WorldToLight, float4(posWS,1));
+				// 	atten *= tex2Dbias(_LightTexture0, float4(uvCookie.xy,0,-8)).w;
+				// 	#endif
 
-				#elif defined(POINT) || defined(POINT_COOKIE)
-					float3 toLight = _LightPos.xyz-posWS;
-					half3 lDirWS = normalize(toLight);
+				// #elif defined(POINT) || defined(POINT_COOKIE)
+				// 	float3 toLight = _LightPos.xyz-posWS;
+				// 	half3 lDirWS = normalize(toLight);
 
-					float atten = tex2D(_LightTextureB0, dot(toLight,toLight) * _LightPos.w).r;
+				// 	float atten = tex2D(_LightTextureB0, dot(toLight,toLight) * _LightPos.w).r;
 
-					atten *= UnityDeferredComputeShadow(posWS, fadeDist, uv);
+				// 	atten *= UnityDeferredComputeShadow(posWS, fadeDist, uv);
 
-					#if defined(POINT_COOKIE)
-					float4 uvCookie = mul(unity_WorldToLight, float4(posWS,1));
-					atten *= texCUBEbias(_LightTexture0, float4(uvCookie.xyz, -8)).w;
-					#endif
-				#else
-				half3 lDirWS = 0;
-				float atten = 0;
-				#endif
+				// 	#if defined(POINT_COOKIE)
+				// 	float4 uvCookie = mul(unity_WorldToLight, float4(posWS,1));
+				// 	atten *= texCUBEbias(_LightTexture0, float4(uvCookie.xyz, -8)).w;
+				// 	#endif
+				// #else
+				// half3 lDirWS = 0;
+				// float atten = 0;
+				// #endif
 
 				half3 lightColor = _LightColor.rgb * atten;
 
@@ -183,6 +183,8 @@ Shader "Unlit/002-Deferred"
 				v2f o;
 				o.vertex = UnityObjectToClipPos(vertex);
 				o.texcoord = texcoord.xy;
+
+                // 通常用于判断D3D平台，在开启抗锯齿的时候图片采样会用到
 				#ifdef UNITY_SINGLE_PASS_STEREO
 				o.texcoord = TransformStereoScreenSpaceTex(o.texcoord,1.0);
 				#endif
